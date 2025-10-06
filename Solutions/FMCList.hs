@@ -157,15 +157,16 @@ inits [] = [[]]
 inits (x:xs) = [] : map (x:) (inits xs)
 
 -- subsequences
-
 subsequences :: [a] -> [[a]]
 subsequences [] = [[]]
 -- TODO
 
+-- any
 any :: (a -> Bool) -> [a] -> Bool
 any _ []     = False
 any p (x:xs) = p x || any p xs
 
+-- all
 all :: (a -> Bool) -> [a] -> Bool
 all _ []     = True
 all p (x:xs) = p x && all p xs
@@ -197,19 +198,21 @@ elem' y (x:xs) = (y == x) || elem' y xs
 
 -- (!!)
 
+-- filter
 filter :: (a -> Bool) -> [a] -> [a]
 filter _ [] = []
 filter p (x:xs)
   | p x       = x : filter p xs
   | otherwise = filter p xs
 
+-- map
 map :: (a -> b) -> [a] -> [b]
 map _ []     = []
 map f (x:xs) = f x : map f xs
 
 -- cycle
 cycle :: [a] -> [a]
-cycle [] = error "cycle: empty list"
+cycle [] = error "cycle undefined for empty list"
 cycle xs = xs ++ cycle xs
 
 -- repeat
@@ -217,8 +220,10 @@ repeat :: a -> [a]
 repeat x = x : repeat x
 
 -- replicate
--- replicate :: Int -> a -> [a]
--- TODO 
+replicate :: Int -> a -> [a]
+replicate n x
+  | n <= 0 = []
+  | otherwise = x : replicate (n - 1) x
 
 -- isPrefixOf
 isPrefixOf :: Eq a => [a] -> [a] -> Bool
@@ -247,6 +252,9 @@ isSuffixOf xs ys = isPrefixOf (reverse xs) (reverse ys)
 -- splitAt n xs  =  (take n xs, drop n xs)
 
 -- break
+break :: (a -> Bool) -> [a] -> ([a], [a])
+break _ [] = ([], [])
+-- TODO
 
 -- lines
 -- words
@@ -254,6 +262,11 @@ isSuffixOf xs ys = isPrefixOf (reverse xs) (reverse ys)
 -- unwords
 
 -- transpose
+transpose :: [[a]] -> [[a]]
+transpose [] = []
+transpose ([] : _) = []
+transpose xss =
+  (map head xss) : transpose (map tail xss)
 
 -- checks if the letters of a phrase form a palindrome (see below for examples)
 palindrome :: String -> Bool
